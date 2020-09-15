@@ -1,0 +1,202 @@
+# -*- coding: utf8 -*-
+class Sudoku:
+    def searchLackingNumbers(self, matrix):
+        stack = []
+        for i in matrix:
+            for j in i:
+                if(j != 0):
+                    stack.append(j)
+        stack_all = []
+        num_limit = 9      
+        pack_num  = int(len(matrix)*len(matrix[0])/9)
+        for i in range(1,1 + num_limit):
+            for j in range(0,pack_num):
+                stack_all.append(i)
+        for i in stack:
+            stack_all.remove(i)
+        return  stack_all
+
+
+    def canPutNumberOnPlace(self, place, matrix, num, crossadds):
+        stack = []
+        #columns
+        '''
+        for p in range(0,len(matrix)):
+            stack.append( matrix[p][place[1]] )
+        '''
+        I = place[0]
+        while(0 <= matrix[I][place[1]]):
+            I-=1
+        column_num=crossadds[I][2*place[1]]
+        I+=1
+        isPlenty=True
+        while(0 <= matrix[I][place[1]]):
+            stack.append( matrix[I][place[1]] )
+            if(I==place[0]):
+                column_num-=num
+            else:
+                if(0==matrix[I][place[1]]):
+                    isPlenty=False
+                else:
+                    column_num-=matrix[I][place[1]]
+            if(column_num<0):
+                return False
+            I+=1
+            if(I==len(matrix)):
+                break
+        if(isPlenty):
+            if not(column_num==0):
+                return False
+        
+        #rows
+        '''
+        for q in range(0,len(matrix[place[0]])):
+            stack.append( matrix[place[0]][q] )
+        '''
+        J = place[1]
+        while(0 <= matrix[place[0]][J]):
+            J-=1
+        row_num=crossadds[place[0]][2*J+1]
+        J+=1
+        isPlenty=True
+        while(0<=matrix[place[0]][J]):
+            stack.append( matrix[place[0]][J] )
+            if(J==place[1]):
+                row_num-=num
+            else:
+                if(0==matrix[place[0]][J]):
+                    isPlenty=False
+                else:
+                    row_num-=matrix[place[0]][J]
+            if(row_num<0):
+                return False
+            J+=1
+            if(J==len(matrix[place[0]])):
+                break
+        if(isPlenty):
+            if not(row_num==0):
+                return False
+
+        '''
+        I=int(place[0]/3)*3
+        J=int(place[1]/3)*3
+
+        for p in range(I, I+3):
+            for q in range(J, J+3):
+                stack.append( matrix[p][q] )
+        '''
+
+        stack = list(set(stack))
+        if num not in stack:
+            return True
+        else:
+            return False
+
+
+    def searchEmptyPlaces(self, matrix):
+        places = []
+        for i in range(0,len(matrix)):
+            for j in range(0,len(matrix[i])):
+                if(matrix[i][j] == 0):
+                    places.append([i,j])
+        return places
+
+
+    #def fillMatrixIntoNumbers(self, matrix, numbers, places):
+    def fillMatrixIntoNumbers(self, matrix, places, crossadds):
+        print('places:', len(places))
+        if(len(places)==0):
+            for rows in matrix:
+                for i in rows:
+                    print(i, ' ', end=''),
+                print()
+            return True
+        else:
+            #iはcandidateの個数の閾値で、選択肢が少ないところを深掘りさせるためのfor文
+            for place in places:
+                initial=0
+                candidate=[]
+                #for num in numbers:
+                for num in range(1, 10):
+                    if(initial != num):
+                        initial=num
+                        if(self.canPutNumberOnPlace(place, matrix, num, crossadds)):
+                            candidate.append(num)
+                if(len(candidate)<10):
+                    for c in candidate:
+                        idx_place=places.index(place)
+                        #idx_num=numbers.index(c)
+                        places.remove(place)
+                        #numbers.remove(c)
+                        matrix[place[0]][place[1]]=c
+                        #if self.fillMatrixIntoNumbers(matrix, numbers, places):
+                        if self.fillMatrixIntoNumbers(matrix, places, crossadds):
+                            return True
+                        matrix[place[0]][place[1]]=0
+                        #numbers.insert(idx_num, c)
+                        places.insert(idx_place, place)
+                    #if(len(candidate)==1):
+                    return False
+            return False
+
+
+
+
+if __name__ == "__main__":
+
+    #Question 207
+    matrix = [
+        [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+        [-1,-1, 0, 0,-1, 0, 0,-1,-1,-1, 0, 0, 0, 0,-1,-1],
+        [-1,-1, 0, 0,-1, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0,-1],
+        [-1, 0, 0, 0, 0,-1,-1, 0, 0, 0, 0, 0,-1,-1, 0, 0],
+        [-1, 0, 0,-1, 0, 0, 0,-1, 0, 0, 0,-1, 0, 0, 0, 0],
+        [-1,-1,-1,-1, 0, 0, 0, 0, 0,-1,-1, 0, 0, 0, 0, 0],
+        [-1, 0, 0,-1, 0, 0,-1, 0, 0, 0,-1, 0, 0,-1, 0, 0],
+        [-1, 0, 0, 0, 0, 0,-1,-1, 0, 0, 0, 0, 0,-1,-1,-1],
+        [-1, 0, 0, 0, 0,-1, 0, 0, 0,-1, 0, 0, 0,-1, 0, 0],
+        [-1, 0, 0,-1,-1, 0, 0, 0, 0, 0,-1,-1, 0, 0, 0, 0],
+        [-1,-1, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0,-1, 0, 0,-1],
+        [-1,-1,-1, 0, 0, 0, 0,-1,-1,-1, 0, 0,-1, 0, 0,-1]
+    ]
+
+    crossadds =[
+        [ 0, 0,  0, 0, 14, 0, 23, 0,  0, 0, 16, 0,  9, 0,  0, 0,  0, 0,  0, 0, 29, 0, 14, 0, 16, 0,  4, 0,  0, 0,  0, 0],
+        [ 0, 0,  0, 8, -1,-1, -1,-1,  0,17, -1,-1, -1,-1,  3, 0, 45, 0,  0,24, -1,-1, -1,-1, -1,-1, -1,-1, 20, 0,  0, 0],
+        [ 0, 0,  9,16, -1,-1, -1,-1, 36,16, -1,-1, -1,-1, -1,-1, -1,-1,  3,27, -1,-1, -1,-1, -1,-1, -1,-1, -1,-1, 10, 0],
+        [ 0,25, -1,-1, -1,-1, -1,-1, -1,-1, 20, 0,  3,15, -1,-1, -1,-1, -1,-1, -1,-1, -1,-1, 38, 0,  4, 4, -1,-1, -1,-1],
+        [ 0, 4, -1,-1, -1,-1,  0,18, -1,-1, -1,-1, -1,-1,  3,17, -1,-1, -1,-1, -1,-1, 30,23, -1,-1, -1,-1, -1,-1, -1,-1],
+        [ 0, 0, 11, 0, 33, 0,  0,17, -1,-1, -1,-1, -1,-1, -1,-1, -1,-1, 16, 0,  0,18  -1,-1, -1,-1, -1,-1, -1,-1, -1,-1],
+        [ 0,12, -1,-1, -1,-1,  3,17, -1,-1, -1,-1,  0,11, -1,-1, -1,-1, -1,-1, 16,17, -1,-1, -1,-1,  0, 3, -1,-1, -1,-1],
+        [ 0,16, -1,-1, -1,-1, -1,-1, -1,-1, -1,-1, 13, 0, 17,35, -1,-1, -1,-1, -1,-1, -1,-1, -1,-1,  0, 0, 24, 0, 17, 0],
+        [ 0,16, -1,-1, -1,-1, -1,-1, -1,-1, 23,12, -1,-1, -1,-1, -1,-1, 17,23, -1,-1, -1,-1, -1,-1, 10,16, -1,-1, -1,-1],
+        [ 0, 4, -1,-1, -1,-1,  6, 0,  4,32, -1,-1, -1,-1, -1,-1, -1,-1, -1,-1,  8, 0,  4,24, -1,-1, -1,-1, -1,-1, -1,-1],
+        [ 0, 0,  0,24, -1,-1, -1,-1, -1,-1, -1,-1, -1,-1,  0,25, -1,-1, -1,-1, -1,-1, -1,-1,  0, 4, -1,-1, -1,-1,  0, 0],
+        [ 0, 0,  0, 0,  0,15, -1,-1, -1,-1, -1,-1, -1,-1,  0, 0,  0, 0,  0, 3, -1,-1, -1,-1,  0,16, -1,-1, -1,-1,  0, 0]
+    ]
+
+
+    #Test case
+    matrix = [
+        [-1, -1, -1, -1, -1],
+        [-1, -1, -1,  0,  0],
+        [-1, -1,  0,  0,  0],
+        [-1,  0,  0,  0, -1],
+        [-1,  0,  0, -1, -1]
+    ]
+
+    crossadds = [
+        [ 0, 0,  0, 0,  0, 0, 15, 0,  3, 0],
+        [ 0, 0,  0, 0, 22, 4, -1,-1, -1,-1],
+        [ 0, 0, 16,11, -1,-1, -1,-1, -1,-1],
+        [ 0,24, -1,-1, -1,-1, -1,-1,  0, 0],
+        [ 0,17, -1,-1, -1,-1,  0, 0,  0, 0]
+    ]
+
+
+    sudoku = Sudoku()
+    #if(sudoku.fillMatrixIntoNumbers(matrix, sudoku.searchLackingNumbers(matrix), sudoku.searchEmptyPlaces(matrix))):
+    if(sudoku.fillMatrixIntoNumbers(matrix, sudoku.searchEmptyPlaces(matrix), crossadds)):
+        print('SUCCESS!!')
+    else:
+        print("FAIL")
