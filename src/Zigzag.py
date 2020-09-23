@@ -1,62 +1,29 @@
 # -*- coding: utf8 -*-
-class Sudoku:
-    def searchLackingNumbers(self, matrix):
-        stack = []
-        for i in matrix:
-            for j in i:
-                if(j != 0):
-                    stack.append(j)
-        stack_all = []
-        num_limit = 9      
-        pack_num  = int(len(matrix)*len(matrix[0])/9)
-        for i in range(1,1 + num_limit):
-            for j in range(0,pack_num):
-                stack_all.append(i)
-        for i in stack:
-            stack_all.remove(i)
-        return  stack_all
-
-
+from src.Sudoku import Sudoku
+class Zigzag(Sudoku):
     def canPutNumberOnPlace(self, place, matrix, num, groups):
         stack = []
         #columns
         for p in range(0,len(matrix)):
             stack.append( matrix[p][place[1]] )
-
         #rows
         for q in range(0,len(matrix[place[0]])):
             stack.append( matrix[place[0]][q] )
-
         #zig-zag
         for i in range(0, len(groups)):
             for j in range(0, len(groups[i])):
                 if(groups[place[0]][place[1]] == groups[i][j]):
                     stack.append( matrix[i][j] )
-
-
         stack = list(set(stack))
         if num not in stack:
             return True
         else:
             return False
 
-
-    def searchEmptyPlaces(self, matrix):
-        places = []
-        for i in range(0,len(matrix)):
-            for j in range(0,len(matrix[i])):
-                if(matrix[i][j] == 0):
-                    places.append([i,j])
-        return places
-
-
     def fillMatrixIntoNumbers(self, matrix, numbers, places, groups):
         if(len(numbers)==0):
-            for rows in matrix:
-                for i in rows:
-                    print(i, ' ', end=''),
-                print()
-            return True
+            super().printMatrix(matrix)
+            return matrix
         else:
             #iはcandidateの個数の閾値で、選択肢が少ないところを深掘りさせるためのfor文
             for place in places:
@@ -69,21 +36,22 @@ class Sudoku:
                             candidate.append(num)
                 if(len(candidate)<5):
                     for c in candidate:
+                        #Insert a number
                         idx_place=places.index(place)
                         idx_num=numbers.index(c)
                         places.remove(place)
                         numbers.remove(c)
                         matrix[place[0]][place[1]]=c
-                        if self.fillMatrixIntoNumbers(matrix, numbers, places, groups):
-                            return True
+                        #Recursion
+                        result=self.fillMatrixIntoNumbers(matrix, numbers, places, groups)
+                        if not(result==[]):
+                            return result
+                        #Remove a number
                         matrix[place[0]][place[1]]=0
                         numbers.insert(idx_num, c)
                         places.insert(idx_place, place)
-                    #if(len(candidate)==1):
-                    return False
-            return False
-
-
+                    return []
+            return []
 
 
 if __name__ == "__main__":
@@ -147,13 +115,9 @@ if __name__ == "__main__":
     ]
 
 
-    
-
-
-    
-
-    sudoku = Sudoku()
-    if(sudoku.fillMatrixIntoNumbers(matrix, sudoku.searchLackingNumbers(matrix), sudoku.searchEmptyPlaces(matrix), groups)):
+    sudoku = Zigzag()
+    result=sudoku.fillMatrixIntoNumbers(matrix, sudoku.searchLackingNumbers(matrix), sudoku.searchEmptyPlaces(matrix), groups)
+    if not(result==[]):
         print('SUCCESS!!')
     else:
         print("FAIL")

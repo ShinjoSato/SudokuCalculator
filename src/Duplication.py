@@ -1,90 +1,37 @@
 # -*- coding: utf8 -*-
-class Sudoku:
+from src.Sudoku import Sudoku
+class Duplication(Sudoku):
     def searchLackingNumbersSet(self, matrixes):
         numbersSet=[]
         for matrix in matrixes:
-            numbersSet.append(self.searchLackingNumbers(matrix))
+            numbersSet.append(super().searchLackingNumbers(matrix))
         return numbersSet
 
-    def searchLackingNumbers(self, matrix):
-        stack = []
-        for i in matrix:
-            for j in i:
-                if(j != 0):
-                    stack.append(j)
-        stack_all = []
-        num_limit = 9      
-        pack_num  = int(len(matrix)*len(matrix[0])/9)
-        for i in range(1,1 + num_limit):
-            for j in range(0,pack_num):
-                stack_all.append(i)
-        for i in stack:
-            stack_all.remove(i)
-        return  stack_all
-
-    def canPutNumberOnDupplicationPlace(self, place, matrixes, id, num, duplications):
+    def canPutNumberOnDuplicationPlace(self, place, matrixes, id, num, duplications):
         if not(self.canPutNumberOnPlace(place,matrixes[id],num)):
             return False
         if(0<len(duplications[id][place[0]][place[1]])):
             matrix_id=duplications[id][place[0]][place[1]][0]
             dup_place=[duplications[id][place[0]][place[1]][1], duplications[id][place[0]][place[1]][2]]
-            if not(self.canPutNumberOnPlace(dup_place, matrixes[matrix_id], num)):
+            if not(super().canPutNumberOnPlace(dup_place, matrixes[matrix_id], num)):
                 return False
         return True
-
-    def canPutNumberOnPlace(self, place, matrix, num):
-        stack = []
-        #columns
-        for p in range(0,len(matrix)):
-            stack.append( matrix[p][place[1]] )
-
-        #rows
-        for q in range(0,len(matrix[place[0]])):
-            stack.append( matrix[place[0]][q] )
-
-        I=int(place[0]/3)*3
-        J=int(place[1]/3)*3
-
-        for p in range(I, I+3):
-            for q in range(J, J+3):
-                stack.append( matrix[p][q] )
-
-        stack = list(set(stack))
-        if num not in stack:
-            return True
-        else:
-            return False
-
 
     def searchEmptyPlacesSet(self,matrixes):
         placesSet=[]
         for matrix in matrixes:
-            placesSet.append(self.searchEmptyPlaces(matrix))
+            placesSet.append(super().searchEmptyPlaces(matrix))
         return placesSet
-
-    def searchEmptyPlaces(self, matrix):
-        places = []
-        #print('matrix',matrix)
-        for i in range(0,len(matrix)):
-            for j in range(0,len(matrix[i])):
-                if(matrix[i][j] == 0):
-                    places.append([i,j])
-        return places
-
 
     def fillMatrixesIntoNumbers(self, matrixes, numbersSet, placesSet, duplications):
         len_numbers=0
         for numbers in numbersSet:
             len_numbers+=len(numbers)
-
         if(len_numbers==0):
             for matrix in matrixes:
-                for rows in matrix:
-                    for i in rows:
-                        print(i, ' ', end=''),
-                    print()
+                super().printMatrix(matrix)
                 print()
-            return True
+            return matrixes
         else:
             #iはcandidateの個数の閾値で、選択肢が少ないところを深掘りさせるためのfor文
             for i in range(0,len(placesSet)):
@@ -94,7 +41,7 @@ class Sudoku:
                     for num in numbersSet[i]:
                         if(initial != num):
                             initial=num
-                            if(self.canPutNumberOnDupplicationPlace(place, matrixes, i, num, duplications)):
+                            if(self.canPutNumberOnDuplicationPlace(place, matrixes, i, num, duplications)):
                                 candidate.append(num)
                     if(len(candidate)<3):
                         for c in candidate:
@@ -113,23 +60,24 @@ class Sudoku:
                                 placesSet[dup_matrix_id].remove(dup_place)
                                 numbersSet[dup_matrix_id].remove(c)
                                 matrixes[dup_matrix_id][dup_place[0]][dup_place[1]]=c
-                                if self.fillMatrixesIntoNumbers(matrixes, numbersSet, placesSet, duplications):
-                                    return True
+                                #Recursion
+                                result=self.fillMatrixesIntoNumbers(matrixes, numbersSet, placesSet, duplications)
+                                if not(result==[]):
+                                    return result
                                 #重複箇所のを省く
                                 matrixes[dup_matrix_id][dup_place[0]][dup_place[1]]=0
                                 numbersSet[dup_matrix_id].insert(idx_dup_num, c)
                                 placesSet[dup_matrix_id].insert(idx_dup_place, dup_place)
                             else:
-                                if self.fillMatrixesIntoNumbers(matrixes, numbersSet, placesSet, duplications):
-                                    return True
+                                #Recursion
+                                result=self.fillMatrixesIntoNumbers(matrixes, numbersSet, placesSet, duplications)
+                                if not(result==[]):
+                                    return result
                             matrixes[i][place[0]][place[1]]=0
                             numbersSet[i].insert(idx_num, c)
                             placesSet[i].insert(idx_place, place)
-                        #if(len(candidate)==1):
-                        return False
-            return False
-
-
+                        return []
+            return []
 
 
 if __name__ == "__main__":
@@ -1015,8 +963,9 @@ if __name__ == "__main__":
     ]
 
 
-    sudoku = Sudoku()
-    if(sudoku.fillMatrixesIntoNumbers(matrixes, sudoku.searchLackingNumbersSet(matrixes), sudoku.searchEmptyPlacesSet(matrixes), duplications)):
+    sudoku = Duplication()
+    result=sudoku.fillMatrixesIntoNumbers(matrixes, sudoku.searchLackingNumbersSet(matrixes), sudoku.searchEmptyPlacesSet(matrixes), duplications)
+    if not(result==[]):
         print('SUCCESS!!')
     else:
         print("FAIL")

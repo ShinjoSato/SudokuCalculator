@@ -1,29 +1,7 @@
 # -*- coding: utf8 -*-
-class SudokuAbs1:
-    def searchLackingNumbers(self, matrix):
-        stack = []
-        for i in matrix:
-            for j in i:
-                if(j != 0):
-                    stack.append(j)
-        stack_all = []
-        num_limit = 9      
-        pack_num  = int(len(matrix)*len(matrix[0])/9)
-        for i in range(1,1 + num_limit):
-            for j in range(0,pack_num):
-                stack_all.append(i)
-        for i in stack:
-            stack_all.remove(i)
-        return  stack_all
-
-
-    #def checkAbsNumbers(self, place, matrix, ):
-
-
-
+from src.Sudoku import Sudoku
+class Abs1(Sudoku):
     def canPutNumberOnPlaceWithAbs1(self, place, matrix, num, absolutes):
-        stack = []
-
         #check absolute 1
         absnums = []
         for abs1 in absolutes:
@@ -38,66 +16,18 @@ class SudokuAbs1:
                     absnums.append(b-1)
                 if(b<9 and b!=0):
                     absnums.append(b+1)
-                #print ('Find', abs1, a, b)
-
-        #columns
-        for p in range(0,len(matrix)):
-            stack.append( matrix[p][place[1]] )
-
-        #rows
-        for q in range(0,len(matrix[place[0]])):
-            stack.append( matrix[place[0]][q] )
-
-        '''
-        #left-up
-        if(place[0]==place[1]):
-            for i in range(0, 9):
-                stack.append(matrix[i][i])
-        
-        #right-up
-        if(place[0]==(9-1)-place[1]):
-            for i in range(0,9):
-                stack.append(matrix[i][8-i])
-        '''
-
-        I=int(place[0]/3)*3
-        J=int(place[1]/3)*3
-
-        for p in range(I, I+3):
-            for q in range(J, J+3):
-                stack.append( matrix[p][q] )
-
-        stack = list(set(stack))
-
         if(0<len(absnums)):
-            if (num not in stack)and(num in absnums):
+            if (super().canPutNumberOnPlace(place,matrix,num))and(num in absnums):
                 return True
             else:
                 return False
         else:
-            if num not in stack:
-                return True
-            else:
-                return False
-
-
-    def searchEmptyPlaces(self, matrix):
-        places = []
-        for i in range(0,len(matrix)):
-            for j in range(0,len(matrix[i])):
-                if(matrix[i][j] == 0):
-                    places.append([i,j])
-        return places
-
-
-    def fillMatrixIntoNumbersWithAbs1(self, matrix, numbers, places, absolutes):
-        #print(numbers)
+            return (super().canPutNumberOnPlace(place,matrix,num))
+    
+    def fillMatrixIntoNumbers(self, matrix, numbers, places, absolutes):
         if(len(numbers)==0):
-            for rows in matrix:
-                for i in rows:
-                    print(i, ' ', end=''),
-                print()
-            return True
+            super().printMatrix(matrix)
+            return matrix
         else:
             #iはcandidateの個数の閾値で、選択肢が少ないところを深掘りさせるためのfor文
             for place in places:
@@ -110,21 +40,22 @@ class SudokuAbs1:
                             candidate.append(num)
                 if(len(candidate)<5):
                     for c in candidate:
+                        #Insert a number
                         idx_place=places.index(place)
                         idx_num=numbers.index(c)
                         places.remove(place)
                         numbers.remove(c)
                         matrix[place[0]][place[1]]=c
-                        if self.fillMatrixIntoNumbersWithAbs1(matrix, numbers, places, absolutes):
-                            return True
+                        #Recursion
+                        result=self.fillMatrixIntoNumbers(matrix, numbers, places, absolutes)
+                        if not(result==[]) :
+                            return result
+                        #Remove a number
                         matrix[place[0]][place[1]]=0
                         numbers.insert(idx_num, c)
                         places.insert(idx_place, place)
-                    #if(len(candidate)==1):
-                    return False
-            return False
-
-
+                    return []
+            return []
 
 
 if __name__ == "__main__":
@@ -155,11 +86,9 @@ if __name__ == "__main__":
     ]
 
 
-    
-
-
-    sudoku = SudokuAbs1()
-    if(sudoku.fillMatrixIntoNumbersWithAbs1(matrix, sudoku.searchLackingNumbers(matrix), sudoku.searchEmptyPlaces(matrix), absolutes)):
+    sudoku = Abs1()
+    result=sudoku.fillMatrixIntoNumbers(matrix, sudoku.searchLackingNumbers(matrix), sudoku.searchEmptyPlaces(matrix), absolutes)
+    if not(result==[]):
         print('SUCCESS!!')
     else:
         print("FAIL")

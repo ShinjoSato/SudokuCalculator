@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
-class Sudoku:
+from src.Sudoku import Sudoku
+class Inequality(Sudoku):
     def searchLackingNumbers(self, matrix):
         stack = []
         for i in matrix:
@@ -16,17 +17,14 @@ class Sudoku:
             stack_all.remove(i)
         return  stack_all
 
-
     def canPutNumberOnPlace(self, place, matrix, num, inequalities):
         stack = []
         #columns
         for p in range(0,len(matrix)):
             stack.append( matrix[p][place[1]] )
-
         #rows
         for q in range(0,len(matrix[place[0]])):
             stack.append( matrix[place[0]][q] )
-
         #inequality
         #To Up
         if(0<place[0]):
@@ -64,35 +62,16 @@ class Sudoku:
                 else:
                     if not(matrix[place[0]][place[1]+1] < num):
                         return False
-
-
         stack = list(set(stack))
         if num not in stack:
             return True
         else:
             return False
 
-
-    def searchEmptyPlaces(self, matrix):
-        places = []
-        for i in range(0,len(matrix)):
-            for j in range(0,len(matrix[i])):
-                if(matrix[i][j] == 0):
-                    places.append([i,j])
-        return places
-
-
-    def printMatrix(self, matrix):
-        for rows in matrix:
-            for i in rows:
-                print(i, ' ', end=''),
-            print()
-
-
     def fillMatrixIntoNumbers(self, matrix, numbers, places, inequalities):
         if(len(numbers)==0):
-            self.printMatrix(matrix)
-            return True
+            super().printMatrix(matrix)
+            return matrix
         else:
             #iはcandidateの個数の閾値で、選択肢が少ないところを深掘りさせるためのfor文
             for place in places:
@@ -103,26 +82,27 @@ class Sudoku:
                         initial=num
                         if(self.canPutNumberOnPlace(place, matrix, num, inequalities)):
                             candidate.append(num)
-                if(len(candidate)<7):
+                if(len(candidate)<4):
                     for c in candidate:
+                        #Insert a number
                         idx_place=places.index(place)
                         idx_num=numbers.index(c)
                         places.remove(place)
                         numbers.remove(c)
                         matrix[place[0]][place[1]]=c
-                        if self.fillMatrixIntoNumbers(matrix, numbers, places, inequalities):
-                            return True
+                        #Recursion
+                        result=self.fillMatrixIntoNumbers(matrix, numbers, places, inequalities)
+                        if not(result==[]):
+                            return result
+                        #Remove a number
                         matrix[place[0]][place[1]]=0
                         numbers.insert(idx_num, c)
                         places.insert(idx_place, place)
-                    return False
-            return False
-
-
+                    return []
+            return []
 
 
 if __name__ == "__main__":
-
     #Question 192
     matrix = [
         [0,0,0,  0,0,0],
@@ -151,11 +131,9 @@ if __name__ == "__main__":
     ]
 
 
-    
-
-
-    sudoku = Sudoku()
-    if(sudoku.fillMatrixIntoNumbers(matrix, sudoku.searchLackingNumbers(matrix), sudoku.searchEmptyPlaces(matrix), inequalities)):
+    sudoku = Inequality()
+    result=sudoku.fillMatrixIntoNumbers(matrix, sudoku.searchLackingNumbers(matrix), sudoku.searchEmptyPlaces(matrix), inequalities)
+    if not(result==[]):
         print('SUCCESS!!')
     else:
         print("FAIL")

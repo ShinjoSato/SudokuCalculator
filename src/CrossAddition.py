@@ -16,7 +16,6 @@ class Sudoku:
             stack_all.remove(i)
         return  stack_all
 
-
     def canPutNumberOnPlace(self, place, matrix, num, crossadds):
         stack = []
         #columns
