@@ -1,0 +1,35 @@
+.square {
+    display: grid;
+    font-size: 26px;
+    font-family: 'Leckerli One', cursive;
+    color: #2f69b3;
+}
+
+.square div {
+    text-align: center;
+    border: 1px solid black;
+}
+
+.square16x16 {
+    grid-template-rows: 160px 160px 160px 160px;
+    grid-template-columns: 160px 160px 160px 160px;
+    border-width: 4px;
+}
+
+.square9x9 {
+    grid-template-rows: 120px 120px 120px;
+    grid-template-columns: 120px 120px 120px;
+    border-width: 4px;
+}
+
+.square4x4 {
+    grid-template-rows: 40px 40px 40px 40px;
+    grid-template-columns: 40px 40px 40px 40px;
+    border-width: 2px;
+}
+
+.square3x3 {
+    grid-template-rows: 40px 40px 40px;
+    grid-template-columns: 40px 40px 40px;
+    border-width: 2px;
+}

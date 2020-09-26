@@ -1,0 +1,128 @@
+<html>
+    <head>
+        <link rel='stylesheet' type='text/css' href='style.css'>
+        <link href="https://fonts.googleapis.com/css2?family=Leckerli+One&display=swap" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.js" integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM=" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <select name='rule' style="font-size: 17px;">
+            <option value='sudoku'>数独</option>
+            <option value='abs1'>一差ナンプレ</option>
+            <option value='chain'>数鎖ナンプレ</option>
+            <option value='cross'>対角線ナンプレ</option>
+            <option value='duplication'>N重ナンプレ</option>
+            <option value='inequal'>不等号ナンプレ</option>
+            <option value='twotone'>ツートンナンプレ</option>
+            <option value='zigzag'>ジグザグナンプレ</option>
+        </select>
+        <select name="size" style="font-size: 17px;">
+            <option value=0>-</option>
+            <option value=9>9x9</option>
+            <option value=12>12x12</option>
+            <option value=16>16x16</option>
+        </select>
+        <button style='font-size: 17px;' onclick="renewField();">Renew</button>
+        <button style='font-size: 17px;' onclick="postMatrix();">Start</button>
+        <div class='field'>
+            <script>
+                /*
+                const matrix=[
+                    [0,3,8, 0,0,0, 0,0,0],
+                    [0,0,0, 6,7,4, 2,3,8],
+                    [2,6,0, 0,0,0, 0,0,0],
+                    [8,0,0, 0,9,1, 0,6,3],
+                    [9,5,6, 0,0,0, 1,0,2],
+                    [0,0,2, 6,8,0, 9,4,0],
+                    [9,0,7, 6,4,0, 0,0,2],
+                    [0,2,0, 7,0,1, 0,0,0],
+                    [5,0,6, 0,2,8, 4,0,0]
+                ]
+                */
+                const matrix=[
+                    [16,5,0,0, 0,1,3,0, 0,0,6,0, 12,0,0,9],
+                    [0,0,3,12, 14,4,15,0, 5,0,0,10, 0,0,16,0],
+                    [7,15,0,0, 0,5,2,11, 8,0,0,3, 0,13,0,0],
+                    [0,0,10,4, 0,13,12,0, 0,1,0,0, 5,0,0,15],
+                    [0,14,0,7, 0,10,11,15, 3,0,0,0, 2,16,5,0],
+                    [0,2,12,0, 9,0,0,14, 11,5,0,16, 0,3,8,0],
+                    [0,8,3,0, 2,0,0,4, 9,0,7,13, 0,6,1,0],
+                    [10,0,1,0, 6,16,8,0, 0,0,0,12, 0,7,4,9],
+                    [10,3,4,0, 5,0,0,0, 0,9,2,16, 0,13,0,8],
+                    [0,15,5,0, 6,9,0,2, 4,0,0,13, 0,1,11,0],
+                    [0,2,16,0, 10,0,15,8, 1,0,0,5, 0,14,4,0],
+                    [0,6,14,1, 0,0,0,11, 15,8,3,0, 9,0,2,0],
+                    [11,0,0,3, 0,0,13,0, 0,6,7,0, 1,15,0,0],
+                    [0,0,13,0, 1,0,0,4, 12,14,2,0, 0,0,6,11],
+                    [0,1,0,0, 5,0,0,15, 0,16,8,10, 4,9,0,0],
+                    [4,0,0,8, 0,10,0,0, 0,15,11,0, 0,0,16,14]
+                ]
+                const size=matrix.length;
+                document.write("<div class='square square"+size+"x"+size+"'>");
+                for(i=0; i<size; i++){
+                    document.write("<div class='square square"+Math.sqrt(size)+"x"+Math.sqrt(size)+"'>");
+                    for(j=0; j<size; j++){
+                        document.write('<div contenteditable="true" onclick="clickDiv();">');
+                        if(0<matrix[i][j])
+                            document.write(matrix[i][j]);
+                        document.write('</div>');
+                    }
+                    document.write("</div>");
+                }
+                document.write("</div>");
+            </script>
+        </div>
+        <script>
+            function postMatrix(){
+                //Organize the data.
+                var matrix=[];
+                for(i=0; i<Math.sqrt($(".square .square div").length); i++)
+                    matrix.push([]);
+                for(i=0; i<Math.sqrt($(".square .square div").length); i++)
+                    for(j=0; j<Math.sqrt($(".square .square div").length); j++){
+                        INDEX=Math.sqrt(matrix.length)*Math.floor(i/Math.sqrt(matrix.length))+Math.floor(j/Math.sqrt(matrix.length));
+                        matrix[INDEX].push(Number($(".square .square div").eq(matrix.length*i+j).text()));
+                    }
+                const json={
+                    'type':$('[name=rule]').val(),
+                    'matrix':matrix
+                }
+                //POST the JSON value.
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'http://192.168.0.5:3333');
+                xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+                xhr.send( JSON.stringify(json) );
+                xhr.onreadystatechange = function() {
+                    if(xhr.readyState === 4 && xhr.status === 200) {
+                        //
+                        console.log( JSON.parse(xhr.responseText) );
+                        const result=JSON.parse(xhr.responseText);
+                        for(i=0; i<Math.sqrt($(".square .square div").length); i++)
+                            for(j=0; j<Math.sqrt($(".square .square div").length); j++){
+                                var I=Math.sqrt(matrix.length)*Math.floor(i/Math.sqrt(matrix.length))+Math.floor(j/Math.sqrt(matrix.length));
+                                var J=Math.sqrt(matrix.length)*(i%Math.sqrt(matrix.length))+(j%Math.sqrt(matrix.length));
+                                $(".square .square div").eq(matrix.length*i+j).text(result["result"][I][J]);
+                            }
+                    }
+                }
+            }
+
+            function renewField(){
+                console.log('renew Field.',$('[name=size]').val());
+                var size=$('[name=size]').val();
+                var text="<div class='square square"+size+"x"+size+"'>";
+                for(i=0; i<size; i++){
+                    text+="<div class='square square"+Math.sqrt(size)+"x"+Math.sqrt(size)+"'>";
+                    for(j=0; j<size; j++)
+                        text+='<div contenteditable="true" onclick="clickDiv();"></div>';
+                    text+="</div>";
+                }
+                text+="</div>";
+                $('.field').html(text);
+            }
+
+            function clickDiv(){
+                console.log('Click div!');
+            }
+        </script>
+    </body>
+</html>
