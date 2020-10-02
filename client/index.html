@@ -16,7 +16,6 @@
             <option value='zigzag'>ジグザグナンプレ</option>
         </select>
         <select name="size" style="font-size: 17px;">
-            <option value=0>-</option>
             <option value=9>9x9</option>
             <option value=12>12x12</option>
             <option value=16>16x16</option>
@@ -55,7 +54,7 @@
                     [0,0,13,0, 1,0,0,4, 12,14,2,0, 0,0,6,11],
                     [0,1,0,0, 5,0,0,15, 0,16,8,10, 4,9,0,0],
                     [4,0,0,8, 0,10,0,0, 0,15,11,0, 0,0,16,14]
-                ]
+                ];
                 const size=matrix.length;
                 document.write("<div class='square square"+size+"x"+size+"'>");
                 for(i=0; i<size; i++){
@@ -88,24 +87,28 @@
                 }
                 //POST the JSON value.
                 var xhr = new XMLHttpRequest();
-                xhr.open('POST', 'http://192.168.0.5:3333');
+                xhr.open('POST', 'http://192.168.0.10:3333');
                 xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
                 xhr.send( JSON.stringify(json) );
                 xhr.onreadystatechange = function() {
                     if(xhr.readyState === 4 && xhr.status === 200) {
-                        //
                         console.log( JSON.parse(xhr.responseText) );
                         const result=JSON.parse(xhr.responseText);
                         for(i=0; i<Math.sqrt($(".square .square div").length); i++)
                             for(j=0; j<Math.sqrt($(".square .square div").length); j++){
-                                var I=Math.sqrt(matrix.length)*Math.floor(i/Math.sqrt(matrix.length))+Math.floor(j/Math.sqrt(matrix.length));
-                                var J=Math.sqrt(matrix.length)*(i%Math.sqrt(matrix.length))+(j%Math.sqrt(matrix.length));
-                                $(".square .square div").eq(matrix.length*i+j).text(result["result"][I][J]);
+                                var point=modifyIJ(i,j);
+                                $(".square .square div").eq(matrix.length*i+j).text(result["result"][point["i"]][point["j"]]);
                             }
                     }
                 }
             }
-
+/*
+            for(a=0;a<3;i++){
+                for(b=0;b<3;b++){
+                    console.log(4*a*9+4*b);
+                }
+            }
+*/
             function renewField(){
                 console.log('renew Field.',$('[name=size]').val());
                 var size=$('[name=size]').val();
@@ -120,8 +123,37 @@
                 $('.field').html(text);
             }
 
+            function convertIndexInMatrix(index,size){
+                const i=Math.floor(index/size), j=index-size*i;
+                const point=modifyIJ(i,j);
+                return [point["i"],point["j"]];
+            }
+
+            function modifyIJ(i,j){
+                return {
+                    "i":Math.sqrt(size)*Math.floor(i/Math.sqrt(size))+Math.floor(j/Math.sqrt(size)), 
+                    "j":Math.sqrt(size)*(i%Math.sqrt(size))+(j%Math.sqrt(size))
+                };
+            }
+
+            var grouplist=[];
+
             function clickDiv(){
                 console.log('Click div!');
+                const lists = Array.from(document.querySelectorAll(".square .square div"));
+                console.log(lists.length);
+                lists.forEach(div => {
+                    console.log('forEach');
+                    div.addEventListener("click", e => {
+                        console.log('addEventListener');
+                        let index = lists.findIndex(div => div === e.target);
+                        console.log(index);
+                        $(".square .square div").eq(index).css("background-color","pink");
+                        console.log(convertIndexInMatrix(index, $("[name=size").val()));
+                        grouplist.push([convertIndexInMatrix(index, $("[name=size").val())]);
+                        console.log("list:",grouplist);
+                    });
+                });
             }
         </script>
     </body>

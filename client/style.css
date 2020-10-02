@@ -26,10 +26,12 @@
     grid-template-rows: 40px 40px 40px 40px;
     grid-template-columns: 40px 40px 40px 40px;
     border-width: 2px;
+    background-color: #dee8ff;
 }
 
 .square3x3 {
     grid-template-rows: 40px 40px 40px;
     grid-template-columns: 40px 40px 40px;
     border-width: 2px;
+    background-color: #dee8ff;
 }

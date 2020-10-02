@@ -23,7 +23,7 @@ class SudokuHandler(server.BaseHTTPRequestHandler):
 
 
 # サーバ起動
-host = '192.168.0.5'
+host = '192.168.0.10'
 port = 3333
 httpd = server.HTTPServer((host, port), SudokuHandler)
 httpd.serve_forever()
