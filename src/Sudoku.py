@@ -108,7 +108,6 @@ if __name__ == "__main__":
         [0,0,5,  0,6,0,  4,0,0]
     ]
 
-
     #Question211
     matrix = [
         [ 2,12, 7, 0,   0,15, 4, 0,   0,16, 5, 0,   0,14, 9, 3],
@@ -151,8 +150,23 @@ if __name__ == "__main__":
         [ 0,10, 0, 0,  12, 9, 8, 4,   0, 0, 2, 0]
     ]
 
+    #Question 139
+    matrix = [
+        [0,0,3,  8,0,5,  1,0,0],
+        [9,0,2,  1,0,4,  6,0,5],
+        [0,0,0,  0,9,0,  0,0,0],
+
+        [0,0,4,  0,7,0,  3,0,0],
+        [0,8,0,  6,0,1,  0,2,0],
+        [0,6,1,  2,0,3,  8,9,0],
+
+        [0,0,0,  0,8,0,  0,0,0],
+        [0,0,7,  0,0,0,  9,0,0],
+        [0,0,5,  0,6,0,  4,0,0]
+    ]
+
     sudoku=Sudoku()
-    result=sudoku.fillMatrixIntoNumbers(matrix, sudoku.searchLackingNumbers(matrix), sudoku.searchEmptyPlaces(matrix),range=3)
+    result=fillMatrixIntoNumbers(matrix, searchLackingNumbers(matrix), searchEmptyPlaces(matrix),range=3)
     if not(result==[]):
         print('SUCCESS!!')
     else:

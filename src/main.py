@@ -10,6 +10,9 @@ from src.Zigzag import Zigzag
 
 def main(values):
     result=[]
+    print("matrix",values["matrix"])
+    print(values["type"])
+    print(values["group"])
     
     if(values['type']=='sudoku'):
         sudoku=Sudoku()

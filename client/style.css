@@ -1,3 +1,11 @@
+.font {
+    font-size: 17px;
+}
+
+.border {
+    border-color:#798dbb;
+}
+
 .square {
     display: grid;
     font-size: 26px;
@@ -5,9 +13,15 @@
     color: #2f69b3;
 }
 
-.square div {
+.square .square div {
     text-align: center;
-    border: 1px solid black;
+    border: 1px solid #798dbb;
+}
+
+.square button {
+    background-color: whitesmoke;
+    font-size: 26px;
+    font-family: 'Leckerli One', cursive;
 }
 
 .square16x16 {
@@ -25,13 +39,26 @@
 .square4x4 {
     grid-template-rows: 40px 40px 40px 40px;
     grid-template-columns: 40px 40px 40px 40px;
-    border-width: 2px;
+    /*border-width: 2px;*/
     background-color: #dee8ff;
+    border: 1px solid#798dbb;
 }
 
 .square3x3 {
     grid-template-rows: 40px 40px 40px;
     grid-template-columns: 40px 40px 40px;
-    border-width: 2px;
+    /*border-width: 2px;*/
     background-color: #dee8ff;
+    border: 1px solid #798dbb;
+}
+
+.square11x11 {
+    display:grid;
+    grid-template-columns: repeat(11, 40px);
+    border: none;
+}
+
+.parcel {
+    background-color: #dee8ff;
+    text-align: center;
 }
