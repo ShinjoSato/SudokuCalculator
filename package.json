@@ -1,24 +1,32 @@
 {
-  "name": "数独",
-  "version": "0.0.0",
+  "name": "sudoku",
+  "version": "1.0.0",
   "description": "First launch",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron .",
+    "build": "electron-packager . sudoku-application --platform=win32 --arch=x64 --overwrite"
   },
   "author": "shinjo sato",
   "license": "ISC",
   "dependencies": {
     "jquery": "^3.5.1"
   },
-  "mac": {
-    "icon": "images/megaman-green02left.png",
-    "target": [
-      "dmg"
-    ],
-    "category": "public.app-category.social-networking"
-  },
   "devDependencies": {
-    "electron": "^10.0.0"
+    "electron": "^11.1.0",
+    "electron-packager": "^15.2.0"
+  },
+  "build": {
+    "mac": {
+      "icon": "sudoku48x48.png",
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.social-networking"
+    },
+    "win": {
+      "icon": "build/sudokuVer2.ico",
+      "target": "nsis"
+    }
   }
 }

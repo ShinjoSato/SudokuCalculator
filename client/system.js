@@ -2,12 +2,17 @@ var grouplist=[], groups=[], options=[];
 createInequalityHTML();
 createInequalityGroup();
 
+//Check current directory.
+let currentWorkingDirectory = process.cwd();
+console.log(currentWorkingDirectory);
+
 /**
  * This sends three values: type, matrix and group to the server then receives the answer.
  */
-function postMatrix(){
+function postMatrix(size){
     //Organize the data.
     var matrix=[];
+    /*The line below is essential for the future version.
     if($('[name=rule]').val()=="inequal"){
         matrix=createInequalityMatrix();
         options=createInequalityGroup();
@@ -20,21 +25,35 @@ function postMatrix(){
                 matrix[INDEX].push(Number($(".square .square div").eq(matrix.length*i+j).text()));
             }
     }
+    */
+    for(i=0; i<Math.sqrt($(".square .square div").length); i++)
+        matrix.push([]);
+    for(i=0; i<Math.sqrt($(".square .square div").length); i++)
+        for(j=0; j<Math.sqrt($(".square .square div").length); j++){
+            INDEX=Math.sqrt(matrix.length)*Math.floor(i/Math.sqrt(matrix.length))+Math.floor(j/Math.sqrt(matrix.length));
+            matrix[INDEX].push(Number($(".square .square div").eq(matrix.length*i+j).text()));
+        }
+    
     const json={
+        /*The line below is essential for the future version.
         'type':$('[name=rule]').val(),
+        */
+        'type':'sudoku',
         'matrix':matrix,
         'group':options
     }
 
     //POST the JSON value.
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', $("[name=ipaddress]").val());
+    //xhr.open('POST', $("[name=ipaddress]").val());
+    xhr.open('POST', "http://127.0.0.1:3333");
     xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
     xhr.send( JSON.stringify(json) );
     xhr.onreadystatechange = function() {
         if(xhr.readyState === 4 && xhr.status === 200) {
             console.log( JSON.parse(xhr.responseText) );
             const result=JSON.parse(xhr.responseText);
+            /*The line below is essential for the future version.
             if($('[name=rule]').val()=="inequal")
                 for(i=0; i<6; i++)
                     for(j=0; j<6; j++)
@@ -45,6 +64,13 @@ function postMatrix(){
                         var point=modifyIJ(i,j);
                         $(".square .square div").eq(matrix.length*i+j).text(result["result"][point["i"]][point["j"]]);
                     }
+            */
+           console.log(result, $(".square .square div").length);
+            for(i=0; i<Math.sqrt($(".square .square div").length); i++)
+                for(j=0; j<Math.sqrt($(".square .square div").length); j++){
+                    var point=modifyIJ(i,j,size);
+                    $(".square .square div").eq(matrix.length*i+j).text(result["result"][point["i"]][point["j"]]);
+                }
         }
     }
 }
@@ -121,11 +147,11 @@ function createInequalityGroup(){
 /**
  * This renews the field on the window then no numbers remain on the field.
  */
-function renewField(){
-    console.log('renew Field.',$('[name=size]').val());
-    var size=$('[name=size]').val();
+function renewField(size, rule){
+    //var size=$('[name=size]').val();
     var text="";
-    if($('[name=rule]').val()=="inequal")
+    //if($('[name=rule]').val()=="inequal")
+    if(rule=="inequal")
         text+=createInequalityHTML();
     else{
         text+="<div class='border square square"+size+"x"+size+"'>";
@@ -147,7 +173,7 @@ function renewField(){
  * @returns {int[2]} 
  */
 function convertIndexInMatrix(index,size){
-    const i=Math.floor(index/size), j=index-size*i, point=modifyIJ(i,j);
+    const i=Math.floor(index/size), j=index-size*i, point=modifyIJ(i,j, size);
     return [point["i"],point["j"]];
 }
 
@@ -157,8 +183,8 @@ function convertIndexInMatrix(index,size){
  * @param {int} j The index in sizeXsize square.
  * @returns {{x:int, y:int}}
  */
-function modifyIJ(i,j){
-    var size=$("[name=size]").val();
+function modifyIJ(i,j,size){
+    //var size=$("[name=size]").val();
     return {
         "i":Math.sqrt(size)*Math.floor(i/Math.sqrt(size))+Math.floor(j/Math.sqrt(size)), 
         "j":Math.sqrt(size)*(i%Math.sqrt(size))+(j%Math.sqrt(size))
@@ -189,8 +215,10 @@ function addInto(index){
  * @param {int} index The index of order. 
  */
 function clickDiv(index){
+    /*The line below is essential for the future version.
     const point=convertIndexInMatrix(index, $("[name=size]").val());
     (include(point,grouplist))? removeFrom(point,index): addInto(index);
+    */
 }
 
 /**
@@ -216,24 +244,24 @@ function include(object,list){
     return (indexIn(object,list)==-1)? false: true;
 }
 
-function grouping(){
+function grouping(size, rule){
     colors=["lightgreen","yellow","#ffbd83","#9eeeae","rgb(116, 242, 255)","#e0a8ff","#ffa0da", "#8eca89", "#ea9f8d"];
     groups.push(grouplist);
     nums=[];
     for(var i=0; i<grouplist.length; i++){
-        var list=modifyIJ(grouplist[i][0], grouplist[i][1]);
-        $(".square .square div").eq(list["i"]*$("[name=size]").val()+list["j"]).css("background-color",colors[(groups.length-1)%9]);
-        nums.push(list["i"]*$("[name=size]").val()+list["j"]);
+        var list=modifyIJ(grouplist[i][0], grouplist[i][1], size);
+        $(".square .square div").eq(list["i"]*size+list["j"]).css("background-color",colors[(groups.length-1)%9]);
+        nums.push(list["i"]*size+list["j"]);
     }
     grouplist=[];
     if(1<groups.length)
-        optGroup();
+        optGroup(size, rule);
 }
 
-function optGroup(){
-    const size=$('[name=size]').val();
+function optGroup(size, rule){
+    //const size=$('[name=size]').val();
     var mtx=[];
-    switch($('[name=rule]').val().toString()){
+    switch(rule.toString()){
         case 'twotone':
             for(var i=0; i<size; i++){
                 line=[];

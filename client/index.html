@@ -7,6 +7,7 @@
     </head>
     <body>
         <!--<input type="text" name="ipaddress" value="http://192.168.0.10:3333">-->
+        <!-- The line below is essential for the future version.
         <input type="text" name="ipaddress" value="http://127.0.0.1:3333">
         <select name='rule'class='font'>
             <option value='sudoku'>数独</option>
@@ -23,11 +24,21 @@
             <option value=12>12x12</option>
             <option value=16>16x16</option>
         </select>
-        <button class='font' onclick="renewField();">Renew</button>
-        <button class='font' onclick="postMatrix();">Start</button>
-        <button class='font' onclick="grouping();">Grouping</button>
+        -->
+        <button class='font' onclick="renewField(9, 'sudoku');">
+            RESET
+        </button>
+        <button class='font' onclick="postMatrix(9);">
+            START
+        </button>
+        <!-- The line below is essential for the future version.
+        <button class='font' onclick="renewField($('[name=size]').val(), $('[name=rule]').val());">Renew</button>
+        <button class='font' onclick="postMatrix($('[name=size]').val());">Start</button>
+        <button class='font' onclick="grouping($("[name=size]").val(), $('[name=rule]').val());">Grouping</button>
+        -->
         <div class='field'>
             <script>
+                
                 const matrix=[
                     [0,3,8, 0,0,0, 0,0,0],
                     [0,0,0, 6,7,4, 2,3,8],

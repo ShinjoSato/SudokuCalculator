@@ -6,7 +6,12 @@ author: Shinjo Sato
 
 start: 2020/09/05
 
-latest: 2020/9/23
+latest: 2020/12/19
+
+
+# ToDo
+
+1. Implimenting sudoku calculator program in Javascript to distribute to customers whose computer doesn't include Python.
 
 ## Detail
 

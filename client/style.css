@@ -3,53 +3,56 @@
 }
 
 .border {
-    border-color:#798dbb;
+    border-color: #e0e0e0;
 }
 
 .square {
     display: grid;
     font-size: 26px;
     font-family: 'Leckerli One', cursive;
-    color: #2f69b3;
+    color:#e0e0e0;
 }
 
 .square .square div {
     text-align: center;
-    border: 1px solid #798dbb;
+    border: 1px solid#e0e0e0;
+}
+
+.square button, .square4x4, .square3x3, .parcel {
+    background-color: #5e9e5e;/*background-color: whitesmoke;*/
 }
 
 .square button {
-    background-color: whitesmoke;
     font-size: 26px;
     font-family: 'Leckerli One', cursive;
+}
+
+.square16x16, .square9x9 {
+    border-width: 4px;
 }
 
 .square16x16 {
     grid-template-rows: 160px 160px 160px 160px;
     grid-template-columns: 160px 160px 160px 160px;
-    border-width: 4px;
 }
 
 .square9x9 {
     grid-template-rows: 120px 120px 120px;
     grid-template-columns: 120px 120px 120px;
-    border-width: 4px;
+}
+
+.square4x4, .square3x3 {
+    border: 1.0px solid#e0e0e0;
 }
 
 .square4x4 {
     grid-template-rows: 40px 40px 40px 40px;
     grid-template-columns: 40px 40px 40px 40px;
-    /*border-width: 2px;*/
-    background-color: #dee8ff;
-    border: 1px solid#798dbb;
 }
 
 .square3x3 {
     grid-template-rows: 40px 40px 40px;
     grid-template-columns: 40px 40px 40px;
-    /*border-width: 2px;*/
-    background-color: #dee8ff;
-    border: 1px solid #798dbb;
 }
 
 .square11x11 {
@@ -59,6 +62,5 @@
 }
 
 .parcel {
-    background-color: #dee8ff;
     text-align: center;
 }
