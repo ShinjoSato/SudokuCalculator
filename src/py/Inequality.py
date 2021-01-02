@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-from src.Sudoku import Sudoku
+from srcpy..Sudoku import Sudoku
 class Inequality(Sudoku):
     def searchLackingNumbers(self, matrix):
         stack = []

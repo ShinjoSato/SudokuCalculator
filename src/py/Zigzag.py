@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-from src.Sudoku import Sudoku
+from src.py.Sudoku import Sudoku
 class Zigzag(Sudoku):
     def canPutNumberOnPlace(self, place, matrix, num, groups):
         stack = []

@@ -3,23 +3,24 @@ let win
 
 function createWindow () {
   //This is for editting.
-  //var subpy = require('child_process').spawn('python',['server.py']);
+  //var subpy = require('child_process').spawn('python',['src/server.py']);
   //This is for .exe file. 
-  var subpy = require('child_process').spawn('python',['resources/app/server.py']);
+  //var subpy = require('child_process').spawn('python',['resources/app/src/server.py']);
 
   console.log(__dirname);
   const win = new BrowserWindow({
     width: 400,
-    height: 470,
-    icon:'sudoku.png',
+    height: 450,
+    icon: __dirname+'/build/appx/StoreLogo.png',
     webPreferences: { 
       enableremotemodule: true,
       nodeIntegration: true
     } 
   })
 
-  win.loadFile('client/index.html')
-  win.webContents.openDevTools()
+  win.loadFile(__dirname+'/src/index.html')
+  //win.webContents.openDevTools() //Showing a dev tool.
+  win.setMenu(null);//Showing a menu bar.
 }
 
 app.on('ready', createWindow)

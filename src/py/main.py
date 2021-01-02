@@ -1,12 +1,12 @@
-from src.Sudoku import Sudoku
+from src.py.Sudoku import Sudoku
 
-from src.Abs1 import Abs1
-from src.Chain import Chain
-from src.Cross import Cross
-from src.Duplication import Duplication
-from src.Inequality import Inequality
-from src.TwoTone import TwoTone
-from src.Zigzag import Zigzag
+from src.py.Abs1 import Abs1
+from src.py.Chain import Chain
+from src.py.Cross import Cross
+from src.py.Duplication import Duplication
+from src.py.Inequality import Inequality
+from src.py.TwoTone import TwoTone
+from src.py.Zigzag import Zigzag
 
 def main(values):
     result=[]

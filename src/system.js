@@ -75,6 +75,26 @@ function postMatrix(size){
     }
 }
 
+function postMatrix2nd(size){
+    //Organize the data.
+    let matrix=[];
+    for(i=0; i<Math.sqrt($(".square .square div").length); i++)
+        matrix.push([]);
+    for(i=0; i<Math.sqrt($(".square .square div").length); i++)
+        for(j=0; j<Math.sqrt($(".square .square div").length); j++){
+            INDEX=Math.sqrt(matrix.length)*Math.floor(i/Math.sqrt(matrix.length))+Math.floor(j/Math.sqrt(matrix.length));
+            matrix[INDEX].push(Number($(".square .square div").eq(matrix.length*i+j).text()));
+        }
+    //Get the result
+    result=fillMatrixIntoNumbers(matrix, searchLackingNumbers(matrix), searchEmptyPlaces(matrix),3);
+    for(i=0; i<Math.sqrt($(".square .square div").length); i++)
+        for(j=0; j<Math.sqrt($(".square .square div").length); j++){
+            var point=modifyIJ(i,j,size);
+            $(".square .square div").eq(matrix.length*i+j).text(result[point["i"]][point["j"]]);
+        }
+}
+
+
 /**
  * This changes a text in the "inequality button" into the opposite symbol.
  * @param {number} index The index number of the "inequality button" from 0 to 59.

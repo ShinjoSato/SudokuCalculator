@@ -1,32 +1,44 @@
 {
-  "name": "sudoku",
+  "name": "SudokuCheetah",
   "version": "1.0.0",
   "description": "First launch",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . sudoku-application --platform=win32 --arch=x64 --overwrite"
+    "build-windows": "electron-packager . sudoku-application --platform=win32 --arch=x64 --overwrite",
+    "build-mac": "electron-packager . sudoku-application --platform=darwin --arch=x64 --overwrite",
+    "dist": "electron-builder"
   },
-  "author": "shinjo sato",
+  "author": "ShinioS",
   "license": "ISC",
   "dependencies": {
     "jquery": "^3.5.1"
   },
   "devDependencies": {
     "electron": "^11.1.0",
-    "electron-packager": "^15.2.0"
+    "electron-builder": "^22.9.1"
   },
   "build": {
-    "mac": {
-      "icon": "sudoku48x48.png",
-      "target": [
-        "dmg"
-      ],
-      "category": "public.app-category.social-networking"
-    },
+    "appId": "Sudoku Cheetah",
+    "files": [
+      "./main.js",
+      "./src"
+    ],
     "win": {
-      "icon": "build/sudokuVer2.ico",
-      "target": "nsis"
+      "icon": "build/appx/StoreLogo.png",
+      "target": "appx"
+    },
+    "directories": {
+      "buildResources": "build",
+      "output": "build"
+    },
+    "appx": {
+      "identityName": "23936Shinio.SudokuCheetah",
+      "applicationId": "Shinio.SudokuCheetah",
+      "publisherDisplayName": "ShinioS",
+      "publisher": "CN=538D6282-CAEA-469B-B590-25C474567FA3",
+      "displayName": "Sudoku Cheetah",
+      "languages":["JA-JP"]
     }
   }
 }

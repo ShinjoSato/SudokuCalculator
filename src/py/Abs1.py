@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-from src.Sudoku import Sudoku
+from src.py.Sudoku import Sudoku
 class Abs1(Sudoku):
     def canPutNumberOnPlaceWithAbs1(self, place, matrix, num, absolutes):
         #check absolute 1

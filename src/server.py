@@ -2,7 +2,7 @@
 import http.server as server
 import socket
 import json
-from src.main import main
+from src.py.main import main
 
 class SudokuHandler(server.BaseHTTPRequestHandler):
     def do_POST(self):

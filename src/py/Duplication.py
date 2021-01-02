@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-from src.Sudoku import Sudoku
+from src.py.Sudoku import Sudoku
 class Duplication(Sudoku):
     def searchLackingNumbersSet(self, matrixes):
         numbersSet=[]

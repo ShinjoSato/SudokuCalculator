@@ -15,7 +15,7 @@
 
 .square .square div {
     text-align: center;
-    border: 1px solid#e0e0e0;
+    border: 1px dashed #e0e0e0;
 }
 
 .square button, .square4x4, .square3x3, .parcel {
@@ -42,7 +42,8 @@
 }
 
 .square4x4, .square3x3 {
-    border: 1.0px solid#e0e0e0;
+    border: 3.0px solid#e0e0e0;
+    margin: -2px;
 }
 
 .square4x4 {
