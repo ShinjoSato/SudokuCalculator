@@ -11,7 +11,7 @@ function createWindow () {
   const win = new BrowserWindow({
     width: 400,
     height: 450,
-    icon: __dirname+'/build/appx/StoreLogo.png',
+    icon: __dirname+'/build/appx/icon.ico',
     webPreferences: { 
       enableremotemodule: true,
       nodeIntegration: true
@@ -20,7 +20,7 @@ function createWindow () {
 
   win.loadFile(__dirname+'/src/index.html')
   //win.webContents.openDevTools() //Showing a dev tool.
-  win.setMenu(null);//Showing a menu bar.
+  win.setMenu(null);//Hiding a menu bar.
 }
 
 app.on('ready', createWindow)

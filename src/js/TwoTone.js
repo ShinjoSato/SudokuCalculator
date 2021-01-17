@@ -130,44 +130,117 @@ class Sudoku{
         }
         return false;
     }
-
-    indexOfListInSets(sets, list){
-        let index=0;
-        for(let s of sets){
-            if(s[0]==list[0]&&s[1]==list[1])
-                return index;
-            else
-                index+=1;
-        }
-        return -1;
-    }
 }
 
 
 
-//main
+class TwoTone extends Sudoku{
+    constructor(){
+        super();
+    }
 
-/*
-let matrix=[
-    [0,0,3,  8,0,5,  1,0,0],
-    [9,0,2,  1,0,4,  6,0,5],
-    [0,0,0,  0,9,0,  0,0,0],
+    start(matrix, twotone){
+        return this.fillMatrixIntoNumbers(
+            matrix, 
+            this.searchLackingNumbers(matrix), 
+            this.searchEmptyPlaces(matrix),
+            twotone
+        );
+    }
 
-    [0,0,4,  0,7,0,  3,0,0],
-    [0,8,0,  6,0,1,  0,2,0],
-    [0,6,1,  2,0,3,  8,9,0],
+    canPutNumberOnPlace(place, matrix, num, twotone){
+        let stack = []
+        //twotone
+        //console.log(twotone);
+        if(0<twotone[place[0]][place[1]])
+            for(let i=0; i<twotone.length; i++){
+                for(let j=0; j<twotone[i].length; j++){
+                    if(twotone[place[0]][place[1]] == twotone[i][j])
+                        stack.push( matrix[i][j] )
+                }
+            }
+        stack.filter(function(x,i,self){
+            return self.indexOf(x)===i;
+        });
+        return (stack.indexOf(num)==-1 && super.canPutNumberOnPlace(place, matrix, num))? true: false;
+    }
 
-    [0,0,0,  0,8,0,  0,0,0],
-    [0,0,7,  0,0,0,  9,0,0],
-    [0,0,5,  0,6,0,  4,0,0]
+    fillMatrixIntoNumbers(matrix, numbers, places, groups){
+        if(numbers.length==0){
+            super.printMatrix(matrix)
+            return matrix
+        }else{
+            //iはcandidateの個数の閾値で、選択肢が少ないところを深掘りさせるためのfor文
+            for(let place of places){
+                let initial=0;
+                let candidate=[];
+                for(let num of numbers){
+                    if(initial != num){
+                        initial=num;
+                        if(this.canPutNumberOnPlace(place, matrix, num, groups))
+                            candidate.push(num);
+                    }
+                }
+                if(candidate.length<4){
+                    for(let c of candidate){
+                        //Insert a number
+                        let idx_place=places.indexOf(place);
+                        let idx_num=numbers.indexOf(c);
+                        places.splice(places.indexOf(place), 1);
+                        numbers.splice(numbers.indexOf(c), 1);
+                        matrix[place[0]][place[1]]=c;
+                        //Recursion
+                        let result=this.fillMatrixIntoNumbers(matrix, numbers, places, groups);
+                        if(0<result.length)
+                            return result;
+                        //Remove a  number
+                        matrix[place[0]][place[1]]=0;
+                        numbers.splice(idx_num, 0, c);
+                        places.splice(idx_place, 0, place);
+                    }
+                    return []
+                }
+            }
+            return []
+        }
+    }
+}
+
+
+let matrix = [
+    [0,0,0,  9,0,0,  0,0,4],
+    [0,0,7,  0,2,0,  0,3,0],
+    [1,0,0,  7,0,5,  0,0,9],
+
+    [0,8,0,  0,0,0,  0,9,0],
+    [7,0,9,  0,1,0,  3,0,2],
+    [0,6,0,  0,0,0,  0,1,0],
+
+    [9,0,0,  4,0,2,  0,0,8],
+    [0,4,0,  0,8,0,  9,0,0],
+    [2,0,0,  0,0,6,  0,0,0]
 ];
+
+let twotone = [
+    [0,0,0,  0,0,1,  1,0,0],
+    [0,1,0,  1,0,0,  0,0,0],
+    [0,0,1,  0,1,0,  0,0,0],
+
+    [0,0,0,  1,0,0,  0,0,2],
+    [0,1,0,  0,0,0,  0,2,0],
+    [1,0,0,  0,0,2,  0,0,0],
+
+    [0,0,0,  0,2,0,  2,0,0],
+    [0,0,0,  0,0,2,  0,2,0],
+    [0,0,2,  2,0,0,  0,0,0]
+];
+
+
 console.log(matrix);
-//let result=fillMatrixIntoNumbers(matrix, searchLackingNumbers(matrix), searchEmptyPlaces(matrix),3);
-let s= new Sudoku();
-let result=s.start(matrix);
+let s= new TwoTone();
+let result=s.start(matrix,twotone);
 if(result.length!=0)
     console.log("SUCCESS");
 else
     console.log("FAIL");
 console.log(result);
-*/

@@ -65,3 +65,26 @@
 .parcel {
     text-align: center;
 }
+
+/*
+    For duplication.html from here.
+*/
+
+.mold-square {
+    position: absolute;
+    display: grid;
+    background-color: #e0fffe;
+    grid-template-columns: repeat(120, 18px);
+    grid-template-rows: repeat(120,18px);
+}
+
+.status {
+    display:grid;
+    grid-template-columns: repeat(4, 120px);
+    padding: 15px 10px 15px 10px;
+}
+
+.input-area {
+    position: absolute;
+    display: grid;
+}

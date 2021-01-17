@@ -111,63 +111,53 @@ class Sudoku{
             return [];
         }
     }
+}
 
-    compareListWithList(list_a, list_b){
-        if(list_a.length==list_b.length)
-            for(let i=0; i<list_a.length; i++){
-                if(list_a[i]!=list_b[i])
-                    return false;
-            }
-        else
-            return false;
-        return true;
+
+class Cross extends Sudoku {
+    constructor(){
+        super();
     }
 
-    containList(list_all, list){
-        for(all of list_all){
-            if(compareListWithList(all,list))
-                return true;
-        }
-        return false;
-    }
-
-    indexOfListInSets(sets, list){
-        let index=0;
-        for(let s of sets){
-            if(s[0]==list[0]&&s[1]==list[1])
-                return index;
-            else
-                index+=1;
-        }
-        return -1;
+    canPutNumberOnPlace(place, matrix, num){
+        let stack =[];
+        let num_limit=matrix.length;
+        //left-up
+        if(place[0]==place[1])
+            for(let i=0; i<num_limit.length; i++)
+                stack.push(matrix[i][i]);
+        //right-up
+        if(place[0]==(num_limit-1)-place[1])
+            for(let i=0; i<num_limit; i++)
+                stack.push(matrix[i][(num_limit-1)-i]);
+        //remove duplication numbers
+        stack.filter(function(x,i,self){
+            return self.indexOf(x)===i;
+        });
+        return (stack.indexOf(num)==-1&&super.canPutNumberOnPlace(place,matrix,num))? true: false;
     }
 }
 
 
+let matrix = [
+    [0,1,0,  0,5,0,  0,2,0],
+    [5,0,0,  6,0,3,  0,0,7],
+    [0,3,0,  0,0,0,  0,1,0],
 
-//main
+    [7,0,0,  0,0,0,  0,0,2],
+    [0,5,0,  2,0,4,  0,9,0],
+    [0,2,0,  0,0,0,  0,8,0],
 
-/*
-let matrix=[
-    [0,0,3,  8,0,5,  1,0,0],
-    [9,0,2,  1,0,4,  6,0,5],
-    [0,0,0,  0,9,0,  0,0,0],
+    [4,0,0,  0,0,0,  0,0,5],
+    [9,0,0,  5,0,2,  0,0,8],
+    [0,7,5,  0,4,0,  9,3,0]
+]
 
-    [0,0,4,  0,7,0,  3,0,0],
-    [0,8,0,  6,0,1,  0,2,0],
-    [0,6,1,  2,0,3,  8,9,0],
-
-    [0,0,0,  0,8,0,  0,0,0],
-    [0,0,7,  0,0,0,  9,0,0],
-    [0,0,5,  0,6,0,  4,0,0]
-];
 console.log(matrix);
-//let result=fillMatrixIntoNumbers(matrix, searchLackingNumbers(matrix), searchEmptyPlaces(matrix),3);
-let s= new Sudoku();
+let s= new Cross();
 let result=s.start(matrix);
 if(result.length!=0)
     console.log("SUCCESS");
 else
     console.log("FAIL");
 console.log(result);
-*/

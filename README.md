@@ -8,6 +8,10 @@ start: 2020/09/05
 
 latest: 2020/12/19
 
+# Colors
+- Square ![](https://via.placeholder.com/16/5e9e5e/FFFFFF/?text=%20) `#5e9e5e`
+- Border color (except out frame) ![](https://via.placeholder.com/16/e0e0e0/FFFFFF/?text=%20) `#e0e0e0`
+- Out frame color ![](https://via.placeholder.com/16/bbbbbb/FFFFFF/?text=%20) `#bbbbbb`
 
 # ToDo
 

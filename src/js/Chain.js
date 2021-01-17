@@ -124,50 +124,145 @@ class Sudoku{
     }
 
     containList(list_all, list){
-        for(all of list_all){
-            if(compareListWithList(all,list))
+        for(let all of list_all){
+            if(this.compareListWithList(all,list))
                 return true;
         }
         return false;
     }
+}
 
-    indexOfListInSets(sets, list){
-        let index=0;
-        for(let s of sets){
-            if(s[0]==list[0]&&s[1]==list[1])
-                return index;
-            else
-                index+=1;
+class Chain extends Sudoku {
+    constructor(){
+        super();
+    }
+
+    start(matrix, chains){
+        return this.fillMatrixIntoNumbers(
+            matrix, 
+            this.searchLackingNumbers(matrix), 
+            this.searchEmptyPlaces(matrix),
+            chains
+        );
+    }
+
+    searchLackingNumbers(matrix){
+        let stack = [];
+        for(let i of matrix){
+            for(let j of i){
+                if(j != 0)
+                    stack.push(j)
+            }
         }
-        return -1;
+        let stack_all = []
+        const num_limit = 6      
+        let pack_num  = Math.floor(matrix.length*matrix[0].length/6);
+        for(let i=1; i<1+num_limit; i++){
+            for(let j=0; j<pack_num; j++){
+                stack_all.push(i);
+            }
+        }
+        for(let i of stack){
+            //ちょっと気になるポイント
+           // stack_all.remove(i)
+            stack_all.splice(stack_all.indexOf(i), 1);
+        }
+        return  stack_all;
+    }
+
+    canPutNumberOnPlace(place, matrix, num, groups){
+        let stack = []
+        //columns
+        for(let p=0; p<matrix.length; p++){
+            stack.push( matrix[p][place[1]] );
+        }
+        //rows
+        for(let q=0; q<matrix[place[0]].length; q++){
+            stack.push( matrix[place[0]][q] );
+        }
+        //chain
+        for(let group of groups){
+            //ちょっと気になるポイント
+            if(this.containList(group,place))
+                for(let g of group){
+                    stack.push(matrix[g[0]][g[1]]);
+                }
+                
+        }
+        stack.filter(function(x,i,self){
+            return self.indexOf(x)===i;
+        });
+        return (stack.indexOf(num)==-1)? true: false;
+    }
+
+    fillMatrixIntoNumbers(matrix, numbers, places, groups){
+        if(numbers.length==0){
+            super.printMatrix(matrix);
+            return matrix;
+        }else{
+            //iはcandidateの個数の閾値で、選択肢が少ないところを深掘りさせるためのfor文
+            for(let place of places){
+                let initial=0
+                let candidate=[]
+                for(let num of numbers){
+                    if(initial != num){
+                        initial=num
+                        if(this.canPutNumberOnPlace(place, matrix, num, groups))
+                            candidate.push(num)
+                    }
+                }
+                if(candidate.length<5){
+                    for(let c of candidate){
+                        //Insert a number
+                        let idx_place=places.indexOf(place);
+                        let idx_num=numbers.indexOf(c);
+                        places.splice(places.indexOf(place), 1);
+                        numbers.splice(numbers.indexOf(c), 1);
+                        matrix[place[0]][place[1]]=c;
+                        //Recursion
+                        let result=this.fillMatrixIntoNumbers(matrix, numbers, places, groups);
+                        if(0<result.length)
+                            return result;
+                        //Remove a  number
+                        matrix[place[0]][place[1]]=0;
+                        numbers.splice(idx_num, 0, c);
+                        places.splice(idx_place, 0, place);
+                    }
+                    return []
+                }
+            }
+            return []
+        }
     }
 }
 
 
+let max = [
+    [1,0,0,  0,0,0],
+    [0,0,0,  0,0,1],
+    [4,0,0,  0,0,0],
 
-//main
+    [0,0,6,  0,0,2],
+    [0,0,0,  0,0,0],
+    [5,0,0,  3,0,0]
+]
 
-/*
-let matrix=[
-    [0,0,3,  8,0,5,  1,0,0],
-    [9,0,2,  1,0,4,  6,0,5],
-    [0,0,0,  0,9,0,  0,0,0],
+let chains = [
+    [[0,0], [0,1], [1,1], [2,0], [2,2], [3,3]],
+    [[0,3], [0,4], [0,5], [1,4], [2,3], [2,5]],
+    [[1,0], [2,1], [1,2], [3,0], [3,2], [4,1]],
 
-    [0,0,4,  0,7,0,  3,0,0],
-    [0,8,0,  6,0,1,  0,2,0],
-    [0,6,1,  2,0,3,  8,9,0],
-
-    [0,0,0,  0,8,0,  0,0,0],
-    [0,0,7,  0,0,0,  9,0,0],
-    [0,0,5,  0,6,0,  4,0,0]
+    [[0,2], [1,3], [2,4], [1,5], [3,5], [4,4]],
+    [[3,1], [4,0], [5,0], [5,1], [5,2], [4,2]],
+    [[3,4], [4,3], [5,3], [5,4], [5,5], [4,5]]
 ];
-console.log(matrix);
-//let result=fillMatrixIntoNumbers(matrix, searchLackingNumbers(matrix), searchEmptyPlaces(matrix),3);
-let s= new Sudoku();
-let result=s.start(matrix);
+
+
+console.log(max);
+let s= new Chain();
+let result=s.start(max,chains);
 if(result.length!=0)
     console.log("SUCCESS");
 else
     console.log("FAIL");
 console.log(result);
-*/

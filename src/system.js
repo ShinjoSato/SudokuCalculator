@@ -86,7 +86,9 @@ function postMatrix2nd(size){
             matrix[INDEX].push(Number($(".square .square div").eq(matrix.length*i+j).text()));
         }
     //Get the result
-    result=fillMatrixIntoNumbers(matrix, searchLackingNumbers(matrix), searchEmptyPlaces(matrix),3);
+    let sudoku=new Sudoku();
+    result=sudoku.start(matrix);
+    //result=fillMatrixIntoNumbers(matrix, searchLackingNumbers(matrix), searchEmptyPlaces(matrix),3);
     for(i=0; i<Math.sqrt($(".square .square div").length); i++)
         for(j=0; j<Math.sqrt($(".square .square div").length); j++){
             var point=modifyIJ(i,j,size);

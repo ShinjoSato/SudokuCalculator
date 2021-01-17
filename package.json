@@ -1,5 +1,5 @@
 {
-  "name": "SudokuCheetah",
+  "name": "SudokuCalculator",
   "version": "1.0.0",
   "description": "First launch",
   "main": "main.js",
@@ -19,10 +19,14 @@
     "electron-builder": "^22.9.1"
   },
   "build": {
-    "appId": "Sudoku Cheetah",
+    "appId": "数独計算機",
     "files": [
       "./main.js",
-      "./src"
+      "./src/*",
+      "./src/images/*",
+      "./src/js/*",
+      "./src/package/*",
+      "./build/appx/*"
     ],
     "win": {
       "icon": "build/appx/StoreLogo.png",
@@ -37,7 +41,7 @@
       "applicationId": "Shinio.SudokuCheetah",
       "publisherDisplayName": "ShinioS",
       "publisher": "CN=538D6282-CAEA-469B-B590-25C474567FA3",
-      "displayName": "Sudoku Cheetah",
+      "displayName": "数独計算機",
       "languages":["JA-JP"]
     }
   }

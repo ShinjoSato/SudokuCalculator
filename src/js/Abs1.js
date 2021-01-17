@@ -122,52 +122,123 @@ class Sudoku{
             return false;
         return true;
     }
-
-    containList(list_all, list){
-        for(all of list_all){
-            if(compareListWithList(all,list))
-                return true;
-        }
-        return false;
-    }
-
-    indexOfListInSets(sets, list){
-        let index=0;
-        for(let s of sets){
-            if(s[0]==list[0]&&s[1]==list[1])
-                return index;
-            else
-                index+=1;
-        }
-        return -1;
-    }
 }
 
 
 
-//main
+class Abs1 extends Sudoku {
+    constructor(){
+        super();
+    }
 
-/*
-let matrix=[
-    [0,0,3,  8,0,5,  1,0,0],
-    [9,0,2,  1,0,4,  6,0,5],
-    [0,0,0,  0,9,0,  0,0,0],
+    start(matrix, absolutes){
+        return this.fillMatrixIntoNumbers(
+            matrix, 
+            this.searchLackingNumbers(matrix), 
+            this.searchEmptyPlaces(matrix),
+            absolutes
+        );
+    }
 
-    [0,0,4,  0,7,0,  3,0,0],
-    [0,8,0,  6,0,1,  0,2,0],
-    [0,6,1,  2,0,3,  8,9,0],
+    canPutNumberOnPlaceWithAbs1(place,matrix,num,absolutes){
+        let absnums=[];
+        for(let abs1 of absolutes){
+            let contain=false;
+            for(let abs of abs1){
+                if(this.compareListWithList(abs,place))
+                    contain=true;
+            }
+            if(contain){
+                let a = matrix[abs1[0][0]][abs1[0][1]],
+                    b = matrix[abs1[1][0]][abs1[1][1]];
+                if(1<a)
+                    absnums.push(a-1);
+                if(a<9 && a!=0)
+                    absnums.push(a+1);
+                if(1<b)
+                    absnums.push(b-1);
+                if(b<9 && b!=0)
+                    absnums.push(b+1);
+            }
+        }
+        if(0<absnums.length){
+            return (super.canPutNumberOnPlace(place,matrix,num)&&(0<=absnums.indexOf(num)))? true: false;
+        }else
+            return (super.canPutNumberOnPlace(place,matrix,num));
+    }
 
-    [0,0,0,  0,8,0,  0,0,0],
-    [0,0,7,  0,0,0,  9,0,0],
-    [0,0,5,  0,6,0,  4,0,0]
+    fillMatrixIntoNumbers(matrix, numbers, places, absolutes){
+        if(numbers.length==0){
+            super.printMatrix(matrix)
+            return matrix
+        }else{
+            //iはcandidateの個数の閾値で、選択肢が少ないところを深掘りさせるためのfor文
+            for(let place of places){
+                let initial=0
+                let candidate=[]
+                for(let num of numbers){
+                    if(initial != num){
+                        initial=num
+                        if(this.canPutNumberOnPlaceWithAbs1(place, matrix, num, absolutes))
+                            candidate.push(num)
+                    }
+                }
+                if(candidate.length<5){
+                    for(let c of candidate){
+                        //Insert a number
+                        let idx_place=places.indexOf(place)
+                        let idx_num=numbers.indexOf(c)
+                        places.splice(places.indexOf(place), 1);
+                        numbers.splice(numbers.indexOf(c), 1);
+                        matrix[place[0]][place[1]]=c;
+                        //Recursion
+                        let result=this.fillMatrixIntoNumbers(matrix, numbers, places, absolutes)
+                        if(0<result.length)
+                            return result;
+                        //Remove a number
+                        matrix[place[0]][place[1]]=0
+                        numbers.splice(idx_num, 0, c);
+                        places.splice(idx_place, 0, place);
+                    }
+                    return []
+                }
+            }
+            return []
+        }
+    }
+}
+
+
+let max = [
+    [0,1,0,  8,0,0,  0,0,0],
+    [0,0,0,  2,3,7,  0,5,0],
+    [0,5,2,  0,0,0,  0,0,4],
+
+    [0,0,0,  7,0,0,  0,0,8],
+    [0,0,1,  0,0,0,  4,0,0],
+    [5,0,0,  0,0,6,  0,0,0],
+
+    [6,0,0,  0,0,0,  8,1,0],
+    [0,3,0,  5,7,8,  0,0,0],
+    [0,0,0,  0,0,9,  0,4,0]
 ];
-console.log(matrix);
-//let result=fillMatrixIntoNumbers(matrix, searchLackingNumbers(matrix), searchEmptyPlaces(matrix),3);
-let s= new Sudoku();
-let result=s.start(matrix);
+
+let abss = [
+    [[0,0],[1,0]],  [[0,2],[1,2]],  [[0,2],[0,3]],  [[0,4],[0,5]],  [[0,7],[0,8]],
+    [[0,8],[1,8]],  [[1,1],[2,1]],  [[2,0],[3,0]],  [[2,1],[3,1]],  [[2,3],[3,3]],
+    [[2,6],[2,7]],  [[3,6],[3,7]],  [[3,4],[4,4]],  [[4,0],[4,1]],  [[4,4],[4,5]],
+    [[4,5],[4,6]],  [[4,7],[4,8]],  [[4,7],[5,7]],  [[5,1],[5,2]],  [[5,2],[5,3]],
+    [[5,3],[6,3]],  [[6,3],[6,4]],  [[6,8],[7,8]],  [[7,0],[8,0]],  [[7,1],[7,2]],
+    [[6,2],[7,2]],  [[7,2],[7,3]],  [[7,4],[8,4]],  [[8,1],[8,2]],  [[8,6],[8,7]],
+    [[8,7],[8,8]]
+];
+
+
+console.log(max);
+let s= new Abs1();
+let result=s.start(max,abss);
 if(result.length!=0)
     console.log("SUCCESS");
 else
     console.log("FAIL");
 console.log(result);
-*/
