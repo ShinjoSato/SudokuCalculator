@@ -11,7 +11,7 @@ function createWindow () {
   const win = new BrowserWindow({
     width: 400,
     height: 450,
-    icon: __dirname+'/build/appx/icon.ico',
+    icon: __dirname+'/build/appx/icon.png',
     webPreferences: { 
       enableremotemodule: true,
       nodeIntegration: true

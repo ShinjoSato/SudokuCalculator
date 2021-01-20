@@ -1,0 +1,17 @@
+body {
+    margin: auto;
+    font-family: 'Noto Serif SC', serif;
+}
+
+.main {
+    background-color: #4a7d4a;
+    color: white;
+}
+
+section {
+    padding: 40px 120px;
+}
+
+li {
+    padding: 15px 0px;
+}

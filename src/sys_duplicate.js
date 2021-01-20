@@ -1,8 +1,44 @@
+function setStatus(progress){
+    Status+=progress;
+    if(Status==0){
+        //枠組み制作状態
+        hideDuplicateSquareField();
+        $("#bt-regress").css("display","none");
+        $("#bt-select").css("display","initial");
+
+        $("#bt-progress").text("枠決定");
+        if(progress<0){
+            $('.input-area').html("");
+            $('.input-area').removeAttr('style');
+            console.log("deleteしたい！:",Status);
+        }
+    }else if(Status==1){
+        //問題入力状態
+        $("#bt-regress").css("display","initial");
+        $("#bt-progress").css("display","initial");
+        $("#bt-select").css("display","none");
+
+        $("#bt-regress").text("枠選択");
+        $("#bt-progress").text("計算");
+        if(0<progress){
+            hideDuplicateSquareField();
+            layoutDuplicateSquaresField();
+        }
+    }else if(Status==2){
+        //結果出力
+        $("#bt-progress").css("display","none");
+        pasteDuplicateMatrixesOnSquares();
+        setStatus(-1);
+    }
+    //console.log("Status:",Status);
+}
+
+//It only executes at first.
 function moldSelectArea(){
     let class_name='.mold-square';
     let doc='';
-    for(let i=0; i<Max; i++){
-        for(let j=0; j<Max; j++){
+    for(let i=0; i<Height; i++){
+        for(let j=0; j<Width; j++){
             doc+='<div class="index-'+i+'-'+j+'" style="border: 1px solid skyblue;"  onclick=insertIntoGroupLists('+i+','+j+')></div>';
         }
     }
@@ -156,7 +192,7 @@ function getDuplicateGroups(){
                     for(let l=0; l<cnames.length-1; l++){
                         if(class_name!=cnames[l]){
                             let list=cnames[l].split('-');
-                            percel=[Number(list[0]), Number(list[1]), Number(list[2])];
+                            percel.push([Number(list[0]), Number(list[1]), Number(list[2])]);
                         }
                     }
                 }
