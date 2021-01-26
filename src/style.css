@@ -73,7 +73,7 @@
 .mold-square {
     position: absolute;
     display: grid;
-    background-color: #e0fffe;
+    background-color: #ffffff;
     grid-template-columns: repeat(120, 18px);
     grid-template-rows: repeat(120,18px);
 }

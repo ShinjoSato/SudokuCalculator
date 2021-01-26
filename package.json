@@ -1,5 +1,5 @@
 {
-  "name": "SudokuCalculator",
+  "name": "MultiSudokuCalculator",
   "version": "1.0.0",
   "description": "First launch",
   "main": "main.js",
@@ -19,7 +19,7 @@
     "electron-builder": "^22.9.1"
   },
   "build": {
-    "appId": "数独計算機",
+    "appId": "合体数独計算機",
     "files": [
       "./main.js",
       "./src/*",
@@ -37,11 +37,11 @@
       "output": "build"
     },
     "appx": {
-      "identityName": "23936Shinio.SudokuCheetah",
-      "applicationId": "Shinio.SudokuCheetah",
+      "identityName": "23936Shinio.MultiSudokuCalculator",
+      "applicationId": "Shinio.MultiSudokuCalculator",
       "publisherDisplayName": "ShinioS",
       "publisher": "CN=538D6282-CAEA-469B-B590-25C474567FA3",
-      "displayName": "数独計算機",
+      "displayName": "合体数独計算機",
       "languages":["JA-JP"]
     }
   }

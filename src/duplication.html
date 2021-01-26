@@ -8,9 +8,27 @@
         <script src="js/Duplication.js" type="text/javascript"></script>
     </head>
     <body>
+        <select id="fr-size" name="fr-height">
+            <option value="30" selected>30x30</option>
+            <option value="60">60x60</option>
+            <option value="120">120x120</option>
+        </select>
         <button id="bt-select" onclick='revertToPreviousStatus();'>選択取り消し</button>
         <button id="bt-regress" onclick="setStatus(-1);">戻る</button>
         <button id="bt-progress" onclick="setStatus(1);">枠決定</button>
+        <select id="input-number" style="display:none;" name="ipt-num">
+            <option value="-1">Delete</option>
+            <option value="0" selected>Manual</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+        </select>
         <div style="font-family: 'Leckerli One', cursive; color:#e0e0e0;">
             <div class='mold-square'></div>
             <div class='input-area'>

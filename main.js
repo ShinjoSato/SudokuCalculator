@@ -9,8 +9,8 @@ function createWindow () {
 
   console.log(__dirname);
   const win = new BrowserWindow({
-    width: 400,
-    height: 450,
+    width: 570,//400,
+    height: 620,//450,
     icon: __dirname+'/build/appx/icon.png',
     webPreferences: { 
       enableremotemodule: true,
@@ -18,7 +18,7 @@ function createWindow () {
     } 
   })
 
-  win.loadFile(__dirname+'/src/index.html')
+  win.loadFile(__dirname+'/src/duplication.html');//win.loadFile(__dirname+'/src/index.html');
   //win.webContents.openDevTools() //Showing a dev tool.
   win.setMenu(null);//Hiding a menu bar.
 }
