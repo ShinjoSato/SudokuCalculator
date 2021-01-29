@@ -54,7 +54,6 @@ function moldSelectArea(){
 
 $(function(){
     $("#fr-size").change(function(){
-        console.log($("#fr-size option:selected").text(),"!!");
         moldSelectArea();
     });
 });
@@ -85,26 +84,32 @@ function revertToPreviousStatus(){
 }
 
 function drawSquareBorder(){
+    //let length=$("#sudoku-size").val();
+    //console.log("GroupList:",GroupLists,length);
     for(let list of GroupLists)
         for(let i=0; i<list.length; i++){
-            if(i<Length)
+            //console.log("list.length:",list.length,"\nlength:",length);
+            let length=Math.sqrt(list.length);
+            if(i<length)
                 $(".index-"+list[i][0]+"-"+list[i][1]).css('border-top', '2px solid green');
-            if(list.length-(Length+1)<i)
+            if(length*length-length-1<i)
                 $(".index-"+list[i][0]+"-"+list[i][1]).css('border-bottom', '2px solid green');
-            if(i%Length==0)
+            if(i%length==0)
                 $(".index-"+list[i][0]+"-"+list[i][1]).css('border-left', '2px solid green');
-            if(i%Length==Length-1)
+            if(i%length==length-1)
                 $(".index-"+list[i][0]+"-"+list[i][1]).css('border-right', '2px solid green');
         }
 }
 
 function insertIntoGroupLists(x,y){
     let list=[];
-    for(let i=0; i<Length; i++)
-        for(let j=0; j<Length; j++)
+    let length=$("#sudoku-size").val();
+    for(let i=0; i<length; i++)
+        for(let j=0; j<length; j++)
             list.push([(x+i),(y+j)]);
     GroupLists.push(list);
     drawSquareBorder();
+    //console.log("サイズ:",$("#sudoku-size").val());
 }
 
 function hideDuplicateSquareField(){
@@ -152,13 +157,17 @@ function clickToInputNumber(class_name){
 }
 
 function colorDuplicateSquares(){
-    const tmp_scale=9;
-    for(let g=0; g<GroupLists.length; g++)
+    //const tmp_scale=$("#sudoku-size").val();
+    for(let g=0; g<GroupLists.length; g++){
+        let tmp_scale=Math.sqrt(GroupLists[g].length);
         for(let i=0; i<tmp_scale; i++)
             for(let j=0; j<tmp_scale; j++)
                 $('.'+g+'-'+i+'-'+j).css("border","1px dashed #e0e0e0");
-    const sqrt_scale=Math.sqrt(tmp_scale);
-    for(let g=0; g<GroupLists.length; g++)
+    }
+    //const sqrt_scale=Math.sqrt(tmp_scale);
+    for(let g=0; g<GroupLists.length; g++){
+        let tmp_scale=Math.sqrt(GroupLists[g].length);
+        let sqrt_scale=Math.sqrt(tmp_scale);
         for(let i=0; i<tmp_scale; i++)
             for(let j=0; j<tmp_scale; j++){
                 if(i%sqrt_scale==0)
@@ -171,7 +180,9 @@ function colorDuplicateSquares(){
                     $('.'+g+'-'+i+'-'+j).css("border-right","1px solid #e0e0e0");
 
             }
-    for(let g=0; g<GroupLists.length; g++)
+    }
+    for(let g=0; g<GroupLists.length; g++){
+        let tmp_scale=Math.sqrt(GroupLists[g].length);
         for(let i=0; i<tmp_scale; i++)
             for(let j=0; j<tmp_scale; j++){
                 if(i==0)
@@ -183,17 +194,20 @@ function colorDuplicateSquares(){
                 if(j==tmp_scale-1)
                     $('.'+g+'-'+i+'-'+j).css("border-right","3px solid #bbbbbb");
             }
+    }
 }
 
 function getDuplicateGroups(){
     let groups=[];
+    //let tmp_scale=$("#sudoku-size").val();
     for(let g=0; g<GroupLists.length; g++){
+        let tmp_scale=Math.sqrt(GroupLists[g].length);
         let oneG=[];
-        for(let i=0; i<9; i++){
+        for(let i=0; i<tmp_scale; i++){
             let rows=[];
-            for(let j=0; j<9; j++){
+            for(let j=0; j<tmp_scale; j++){
                 let percel=[];
-                class_name=g+'-'+i+'-'+j;
+                class_name=g+'-'+i+'-'+j; //console.log(class_name);
                 let cnames=$('.'+class_name).attr('class').split(' ');
                 if(2<cnames.length){
                     for(let l=0; l<cnames.length-1; l++)
@@ -213,6 +227,7 @@ function getDuplicateGroups(){
 
 function calcDuplicateMatrixes(){
     let s= new Duplication();
+    console.log(getDuplicateMatrixes(),"\n=====\n",getDuplicateGroups());
     return s.start(
         getDuplicateMatrixes(),
         getDuplicateGroups()
@@ -221,13 +236,14 @@ function calcDuplicateMatrixes(){
 
 function getDuplicateMatrixes(){
     let matrixes=[];
-    let tmp_scale=9;
-    for(let m=0; m<GroupLists.length; m++){
+    //let tmp_scale=$("#sudoku-size").val();
+    for(let g=0; g<GroupLists.length; g++){
+        let tmp_scale=Math.sqrt(GroupLists[g].length);
         let matrix=[];
         for(let i=0; i<tmp_scale; i++){
             let rows=[];
             for(let j=0; j<tmp_scale; j++)
-                rows.push(Number($('.'+m+'-'+i+'-'+j).text()));
+                rows.push(Number($('.'+g+'-'+i+'-'+j).text()));
             matrix.push(rows);
         }
         matrixes.push(matrix);
@@ -238,10 +254,13 @@ function getDuplicateMatrixes(){
 function pasteDuplicateMatrixesOnSquares(){
     try{
         const result=calcDuplicateMatrixes();
-        for(let g=0; g<GroupLists.length; g++)
-            for(let i=0; i<9; i++)
-                for(let j=0; j<9; j++)
+        //let tmp_scale=$("#sudoku-size").val();
+        for(let g=0; g<GroupLists.length; g++){
+            let tmp_scale=Math.sqrt(GroupLists[g].length);
+            for(let i=0; i<tmp_scale; i++)
+                for(let j=0; j<tmp_scale; j++)
                     $('.'+g+'-'+i+'-'+j).text(result[g][i][j]);
+        }
     }catch(e){
         console.log(e);
         alert("計算に失敗しました。\nもう一度入力内容をご確認ください。");

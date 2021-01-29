@@ -12,7 +12,6 @@ console.log(currentWorkingDirectory);
 function postMatrix(size){
     //Organize the data.
     var matrix=[];
-    /*The line below is essential for the future version.
     if($('[name=rule]').val()=="inequal"){
         matrix=createInequalityMatrix();
         options=createInequalityGroup();
@@ -25,7 +24,6 @@ function postMatrix(size){
                 matrix[INDEX].push(Number($(".square .square div").eq(matrix.length*i+j).text()));
             }
     }
-    */
     for(i=0; i<Math.sqrt($(".square .square div").length); i++)
         matrix.push([]);
     for(i=0; i<Math.sqrt($(".square .square div").length); i++)
@@ -35,10 +33,7 @@ function postMatrix(size){
         }
     
     const json={
-        /*The line below is essential for the future version.
         'type':$('[name=rule]').val(),
-        */
-        'type':'sudoku',
         'matrix':matrix,
         'group':options
     }
@@ -53,7 +48,6 @@ function postMatrix(size){
         if(xhr.readyState === 4 && xhr.status === 200) {
             console.log( JSON.parse(xhr.responseText) );
             const result=JSON.parse(xhr.responseText);
-            /*The line below is essential for the future version.
             if($('[name=rule]').val()=="inequal")
                 for(i=0; i<6; i++)
                     for(j=0; j<6; j++)
@@ -64,7 +58,6 @@ function postMatrix(size){
                         var point=modifyIJ(i,j);
                         $(".square .square div").eq(matrix.length*i+j).text(result["result"][point["i"]][point["j"]]);
                     }
-            */
            console.log(result, $(".square .square div").length);
             for(i=0; i<Math.sqrt($(".square .square div").length); i++)
                 for(j=0; j<Math.sqrt($(".square .square div").length); j++){
@@ -237,10 +230,8 @@ function addInto(index){
  * @param {int} index The index of order. 
  */
 function clickDiv(index){
-    /*The line below is essential for the future version.
     const point=convertIndexInMatrix(index, $("[name=size]").val());
     (include(point,grouplist))? removeFrom(point,index): addInto(index);
-    */
 }
 
 /**

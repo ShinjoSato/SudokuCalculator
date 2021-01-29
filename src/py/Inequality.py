@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-from srcpy..Sudoku import Sudoku
+from Sudoku import Sudoku
 class Inequality(Sudoku):
     def searchLackingNumbers(self, matrix):
         stack = []
@@ -8,8 +8,8 @@ class Inequality(Sudoku):
                 if(j != 0):
                     stack.append(j)
         stack_all = []
-        num_limit = 6
-        pack_num  = int(len(matrix)*len(matrix[0])/6)
+        num_limit = 7
+        pack_num  = int(len(matrix)*len(matrix[0])/7)
         for i in range(1,1 + num_limit):
             for j in range(0,pack_num):
                 stack_all.append(i)
@@ -130,6 +130,70 @@ if __name__ == "__main__":
         [-1, -1, -1, 1, 1]
     ]
 
+    matrix=[
+        [0,1,0,  0,0,6,  0],
+        [0,0,6,  0,5,0,  0],
+        [0,4,1,  0,2,7,  0],
+
+        [0,5,0,  0,0,3,  0],
+        [4,0,0,  1,0,0,  6],
+        [0,7,0,  4,0,2,  0],
+
+        [5,0,0,  0,0,0,  3]
+    ]
+
+    inequalities=[
+        [-1,1,1,  -1,1,1],
+        [1,1,1,   -1,1,-1,-1],
+        [-1,1,-1,  1,-1,1],
+        [-1,1,-1,  1,-1,1,1],
+        [-1,-1,1,  -1,1,-1],
+
+        [-1,1,1,  1,1,-1,  -1],
+
+        [1,-1,1,  1,-1,-1],
+        [1,-1,1,  -1,-1,1,  1],
+        [-1,1,-1,  1,1,1],
+        [-1,1,-1,  1,1,-1,  -1],
+        [1,-1,-1,  1,-1,-1],
+
+        [1,-1,-1,  1,-1,1,  1],
+        [1,-1,1,  -1,1,-1]
+    ]
+
+    #Question 162 extends
+    matrix=[
+        [5,2,0,  0,  0,0,0],
+        [0,0,0,  0,  1,0,7],
+        [0,0,4,  7,  0,0,0],
+
+        [0,7,5,  0,  3,2,0],
+        
+        [0,0,0,  1,  4,0,0],
+        [1,0,7,  0,  0,0,0],
+        [0,0,0,  0,  0,4,3]
+    ]
+    inequalities=[
+        [-1,-1,1,  1,-1,-1],
+        [-1,1,1,  1,  -1,-1,1],
+
+        [1,1,-1,  -1,1,1],
+        [1,1,-1,  1,1,-1,  -1],
+
+        [1,-1,1,  -1,-1,1],
+        [1,1,1,  -1,1,1,  -1],
+
+        [1,-1,1,  -1,-1,-1],
+        [1,-1,-1,-1,  1,1,1],
+
+        [-1,-1,-1,  1,1,-1],
+        [-1,-1,1,  1,1,-1,  1],
+
+        [1,1,-1,  1,-1,1],
+        [1,-1,-1,  1,1,1,  -1],
+
+        [-1,1,1,  1,-1,-1]
+    ]
 
     sudoku = Inequality()
     result=sudoku.fillMatrixIntoNumbers(matrix, sudoku.searchLackingNumbers(matrix), sudoku.searchEmptyPlaces(matrix), inequalities)

@@ -29,19 +29,31 @@
             <option value="8">8</option>
             <option value="9">9</option>
         </select>
+        数独サイズ:
+        <select id="sudoku-size">
+            <option value="6">6x6</option>
+            <option value="9" selected>9x9</option>
+            <option value="12">12x12</option>
+            <option value="16">16x16</option>
+        </select>
+        <button onclick="onlycheck();">チェック</button>
         <div style="font-family: 'Leckerli One', cursive; color:#e0e0e0;">
             <div class='mold-square'></div>
             <div class='input-area'>
                 <script>
-                    const scale=9;
+                    //const scale=9;
                     let GroupLists=[];
-                    const Length=9;
+                    //const Length=9;
                     const Height=120;
                     const Width=120;
                     let Status=0;
 
                     moldSelectArea();
                     $("#bt-regress").css("display","none");
+
+                    function onlycheck(){
+                        console.log(GroupLists);
+                    }
                 </script>
             </div>
         </div>
